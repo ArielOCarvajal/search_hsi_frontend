@@ -16,7 +16,7 @@ export default function SearchBar() {
     <form className="search-bar" onSubmit={handleSearch}>
       <input
         type="text"
-        placeholder="Buscar por nombre, usuario o rol..."
+        placeholder="Buscar por nombre, DNI, matrícula, usuario o rol..."
         value={localQ}
         onChange={(e) => setLocalQ(e.target.value)}
         className="search-input"
