@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useUserStore from '../store/userStore';
 
 export default function SearchBar() {
-  const { searchFilters, setSearchFilters, searchUsers, setCurrentPage } = useUserStore();
+  const { searchFilters, setSearchFilters, searchUsers, fetchUsers, setCurrentPage } = useUserStore();
   const [localQ, setLocalQ] = useState(searchFilters.q);
 
   const handleSearch = (e) => {
@@ -12,15 +12,35 @@ export default function SearchBar() {
     searchUsers();
   };
 
+  const handleClear = () => {
+    setLocalQ('');
+    setSearchFilters({ ...searchFilters, q: '' });
+    setCurrentPage(1);
+    fetchUsers(); // Usar fetchUsers para cargar todos los usuarios sin filtros
+  };
+
   return (
     <form className="search-bar" onSubmit={handleSearch}>
-      <input
-        type="text"
-        placeholder="Buscar por nombre, DNI, matrícula, usuario o rol..."
-        value={localQ}
-        onChange={(e) => setLocalQ(e.target.value)}
-        className="search-input"
-      />
+      <div className="search-input-container">
+        <input
+          type="text"
+          placeholder="Buscar por nombre, DNI, matrícula, usuario o rol..."
+          value={localQ}
+          onChange={(e) => setLocalQ(e.target.value)}
+          className="search-input"
+        />
+        {localQ && (
+          <button
+            type="button"
+            className="clear-search-button"
+            onClick={handleClear}
+            aria-label="Limpiar búsqueda"
+            title="Limpiar búsqueda"
+          >
+            ×
+          </button>
+        )}
+      </div>
       <button type="submit" className="search-button">
         Buscar
       </button>

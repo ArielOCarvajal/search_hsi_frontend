@@ -15,7 +15,7 @@ export default function Pagination() {
   if (totalPages <= 1) return null;
 
   return (
-    <div className="pagination">
+    <div className="pagination" style={{ display: 'none' }}>
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
