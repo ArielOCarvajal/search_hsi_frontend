@@ -20,7 +20,7 @@ function App() {
       <header className="app-header">
         <img src={logo} alt="Logo Hospital Central" className="app-logo" />
         <h1>Hospital Central de Mendoza</h1>
-        <p>Sistema de consulta de usuarios HSI</p>
+        <p>Herramienta de consulta de usuarios HSI</p>
       </header>
 
       <main className="app-main">
