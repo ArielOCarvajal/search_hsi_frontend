@@ -30,7 +30,7 @@ export default function SearchBar() {
       <div className="search-input-container">
         <input
           type="text"
-          placeholder="Buscar por nombre, DNI o matrícula"
+          placeholder="Buscar por DNI o matrícula"
           value={localQ}
           onChange={(e) => setLocalQ(e.target.value)}
           className="search-input"
