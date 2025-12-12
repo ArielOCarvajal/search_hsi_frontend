@@ -37,6 +37,11 @@ body {
   opacity: 0.9;
 }
 
+.app-logo {
+  height: 100px;
+  margin-bottom: 20px;
+}
+
 .app-main {
   max-width: 1400px;
   margin: 0 auto;

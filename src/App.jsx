@@ -5,6 +5,7 @@ import UserCards from "./components/UserCards";
 import Pagination from "./components/Pagination";
 import Loading from "./components/Loading";
 import ErrorMessage from "./components/ErrorMessage";
+import logo from "./assets/Logo_hc.png";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
+        <img src={logo} alt="Logo Hospital Central" className="app-logo" />
         <h1>Hospital Central de Mendoza</h1>
         <p>Sistema de consulta de usuarios HSI</p>
       </header>
