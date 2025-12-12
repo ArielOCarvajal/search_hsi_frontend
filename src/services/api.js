@@ -32,3 +32,25 @@ export async function searchUsers(filters, limit = 50, offset = 0) {
   );
   return handleResponse(response);
 }
+
+export async function login(usuario, contrasena) {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ usuario, contrasena })
+  });
+  return handleResponse(response);
+}
+
+// Helper para futuras llamadas autenticadas
+export function getAuthHeaders() {
+  const token = localStorage.getItem('hsi_auth_token');
+  return token ? {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  } : {
+    'Content-Type': 'application/json'
+  };
+}
