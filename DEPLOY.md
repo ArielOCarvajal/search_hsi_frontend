@@ -29,6 +29,21 @@ VITE_API_URL=https://your-backend.up.railway.app/api/v1
 - No incluyas barra final en la URL
 - El prefijo `VITE_` es necesario para que Vite exponga la variable al cliente
 
+### ⚠️ PROBLEMA COMÚN: Variables de entorno no se aplican
+
+Si después del deploy ves errores como `ERR_CONNECTION_REFUSED` a `localhost:8000`, es porque las variables de Vite necesitan estar disponibles durante el **build-time**, no en runtime.
+
+**Solución implementada:**
+El `Dockerfile` ya está configurado para aceptar `VITE_API_URL` como build argument:
+```dockerfile
+ARG VITE_API_URL=http://localhost:8000/api/v1
+ENV VITE_API_URL=$VITE_API_URL
+```
+
+Esto permite que Railway pase la variable durante el build de Docker, y Vite la embeda correctamente en el JavaScript.
+
+**📖 Para más detalles, consulta:** [RAILWAY_VITE_ENV_VARS.md](./RAILWAY_VITE_ENV_VARS.md)
+
 ## Paso 3: Configurar el deploy
 
 Railway detectará automáticamente:
@@ -109,10 +124,29 @@ railway up
 - Verifica que el archivo existe y está copiado en el Dockerfile
 - El `try_files` debe incluir `$uri $uri/ /index.html`
 
-### Error de conexión con el backend
-- Verifica que `VITE_API_URL` apunte a la URL correcta del backend
+### Error de conexión con el backend (`ERR_CONNECTION_REFUSED` a localhost:8000)
+
+**Síntoma:** El navegador intenta conectar a `http://localhost:8000` en lugar de tu backend de Railway.
+
+**Causa:** Las variables de Vite se embeben durante el build, pero Railway las inyecta en runtime.
+
+**Solución:**
+1. Verifica que el `Dockerfile` tenga las líneas:
+   ```dockerfile
+   ARG VITE_API_URL=http://localhost:8000/api/v1
+   ENV VITE_API_URL=$VITE_API_URL
+   ```
+2. Verifica que `VITE_API_URL` esté configurada en Railway
+3. **Opcional:** Limpia la cache de Railway agregando temporalmente `NO_CACHE=1`
+4. Haz redeploy
+5. Limpia cache del navegador y haz hard refresh (Ctrl+Shift+R)
+
+**📖 Ver guía completa:** [RAILWAY_VITE_ENV_VARS.md](./RAILWAY_VITE_ENV_VARS.md)
+
+### Otros problemas de conexión con el backend
 - Asegúrate de que el backend esté corriendo
 - Verifica los CORS en el backend
+- Verifica que la URL no tenga barra final
 
 ## Actualización de la aplicación
 
@@ -133,3 +167,19 @@ VITE_API_URL=http://localhost:8000/api/v1
 ```
 VITE_API_URL=https://your-backend.up.railway.app/api/v1
 ```
+
+## Limpiar Cache de Railway
+
+Si necesitas forzar un rebuild completo sin cache (útil cuando cambias el Dockerfile o variables de build):
+
+**Método 1: Variable temporal**
+1. Agregar en Railway: `NO_CACHE=1` o `RAILPACK_DISABLE_CACHE=*`
+2. Esperar el deploy
+3. Eliminar la variable
+
+**Método 2: Archivo de clear cache**
+1. Crear archivo vacío: `touch .railway-clear-cache`
+2. Hacer commit y push
+3. Después del deploy, eliminar el archivo
+
+📖 **Documentación detallada:** [RAILWAY_VITE_ENV_VARS.md](./RAILWAY_VITE_ENV_VARS.md)
